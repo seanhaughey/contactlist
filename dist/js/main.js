@@ -19839,6 +19839,12 @@ var AppActions = {
 			actionType: AppConstants.SAVE_CONTACT,
 			contact: contact
 		});
+	},
+	receiveContacts: function(contacts){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_CONTACTS,
+			contacts: contacts
+		});
 	}
 }
 
@@ -19928,7 +19934,8 @@ module.exports= App;
 
 },{"../actions/AppActions":165,"../stores/AppStore":171,"./AddForm.js":166,"react":164}],168:[function(require,module,exports){
 module.exports = {
-	SAVE_CONTACT: 'SAVE_CONTACT'
+	SAVE_CONTACT: 'SAVE_CONTACT',
+	RECEIVE_CONTACTS: 'RECEIVE_CONTACTS'
 }
 
 },{}],169:[function(require,module,exports){
@@ -19953,6 +19960,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var AppAPI = require('./utils/appAPI.js');
 
+AppAPI.getContacts();
+
 ReactDOM.render(
 	React.createElement(App, null),
 	document.getElementById('app')
@@ -19975,6 +19984,9 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	saveContact: function(contact){
 		_contacts.push(contact);
+	},
+	setContacts: function(contacts){
+		_contacts = contacts;
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
@@ -20003,6 +20015,17 @@ AppDispatcher.register(function(payload){
 		// Emit Change
 		AppStore.emit(CHANGE_EVENT);
 		break;
+
+		case AppConstants.RECEIVE_CONTACTS:
+		console.log('receiving contacts')
+
+		// Store Save
+		AppStore.setContacts(action.contacts);
+
+		// Emit Change
+		AppStore.emit(CHANGE_EVENT);
+		break;
+
 	}
 
 	return true;
@@ -20019,7 +20042,24 @@ module.exports = {
 		this.firebaseRef = new Firebase('https://contactlist11.firebaseio.com/contacts');
 		this.firebaseRef.push({
 			contact: contact
-		})
+		});
+	},
+
+	getContacts: function(){
+		this.firebaseRef = new Firebase('https://contactlist11.firebaseio.com/contacts');
+		this.firebaseRef.once("value", function(snapshot){
+			var contacts = [];
+			snapshot.forEach(function(childSnapshot){
+				var contact = {
+					id: childSnapshot.key(),
+					name: childSnapshot.val().contact.name,
+					phone: childSnapshot.val().contact.phone,
+					email: childSnapshot.val().contact.email
+				}
+				contacts.push(contact);
+				AppActions.receiveContacts(contacts);
+			});
+		});
 	}
 }
 
