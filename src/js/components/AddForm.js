@@ -33,6 +33,10 @@ var AddForm = React.createClass({
 		}
 
 		AppActions.saveContact(contact);
+
+		React.findDOMNode(this.refs.name).value = "";
+		React.findDOMNode(this.refs.phone).value = "";
+		React.findDOMNode(this.refs.email).value = "";
 	}
 });
 

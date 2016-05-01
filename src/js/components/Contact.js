@@ -15,6 +15,7 @@ var Contact = React.createClass({
 	},
 
 	handleRemove: function(i, j){
+		alert ('Are you sure you want to delete?');
 		AppActions.removeContact(i);
 	},
 

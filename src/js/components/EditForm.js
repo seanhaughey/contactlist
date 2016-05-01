@@ -28,6 +28,7 @@ var EditForm = React.createClass({
 		var selected = this.state.selected;
 		selected.name = newState;
 		this.setState({selected: selected});
+
 	},
 
 	handleSubmit: function(e){
@@ -41,7 +42,9 @@ var EditForm = React.createClass({
 		}
 
 		AppActions.updateContact(contact);
+
 	}
+
 });
 
 module.exports= EditForm;

@@ -37,6 +37,7 @@ var AppStore = assign({}, EventEmitter.prototype, {
 				_contacts.push(contact);
 			}
 		}
+		_contact_to_edit = '';
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);

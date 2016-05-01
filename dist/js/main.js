@@ -19908,6 +19908,10 @@ var AddForm = React.createClass({displayName: "AddForm",
 		}
 
 		AppActions.saveContact(contact);
+
+		React.findDOMNode(this.refs.name).value = "";
+		React.findDOMNode(this.refs.phone).value = "";
+		React.findDOMNode(this.refs.email).value = "";
 	}
 });
 
@@ -19980,6 +19984,7 @@ var Contact = React.createClass({displayName: "Contact",
 	},
 
 	handleRemove: function(i, j){
+		alert ('Are you sure you want to delete?');
 		AppActions.removeContact(i);
 	},
 
@@ -20058,6 +20063,7 @@ var EditForm = React.createClass({displayName: "EditForm",
 		var selected = this.state.selected;
 		selected.name = newState;
 		this.setState({selected: selected});
+
 	},
 
 	handleSubmit: function(e){
@@ -20071,7 +20077,9 @@ var EditForm = React.createClass({displayName: "EditForm",
 		}
 
 		AppActions.updateContact(contact);
+
 	}
+
 });
 
 module.exports= EditForm;
@@ -20154,6 +20162,7 @@ var AppStore = assign({}, EventEmitter.prototype, {
 				_contacts.push(contact);
 			}
 		}
+		_contact_to_edit = '';
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
